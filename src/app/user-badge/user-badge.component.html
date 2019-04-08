@@ -1,0 +1,5 @@
+<div class="user-badge" *ngIf="user$ | async as user" (click)="goToUser(user.id)">
+	{{user.id}}
+	<div></div>
+	{{user.name}}
+</div>

@@ -1,0 +1,15 @@
+.room-list-container {
+	display: flex;
+	flex-wrap: wrap;
+
+}
+
+.room-item {
+	height: 50px;
+	border: 1rem solid #32a1ce;
+	margin: 10px;
+}
+
+.add-room {
+	border-color: #f0bbcc;
+}

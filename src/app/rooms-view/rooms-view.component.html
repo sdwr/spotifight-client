@@ -1,0 +1,17 @@
+<div class="room-list-container">
+	<div *ngFor="let room of rooms | async">
+		<div class="room-item" (click)=selectRoom(room)>
+			{{room._id}}
+			{{room.name}}
+			{{room.description}}
+			<div></div>
+			{{room.users.length}}
+		</div>
+	</div>
+	<div class="add-room room-item" (click)="createRoom()">
+		+ Add Room
+	</div>
+</div>
+
+<app-user-badge></app-user-badge>
+

@@ -1,0 +1,8 @@
+<div class="home-view-container">
+	<app-back-to-rooms></app-back-to-rooms>
+	<div *ngIf="room$ |async as room">
+		{{room._id}}
+	</div>
+</div>
+
+<app-user-badge></app-user-badge>
