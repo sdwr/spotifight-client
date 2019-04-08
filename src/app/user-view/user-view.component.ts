@@ -17,9 +17,9 @@ export class UserViewComponent implements OnInit {
   						private userService: UserService) { }
 
   ngOnInit() {
-  	this.user$ = this.route.paramMap.pipe(
+  	this.route.paramMap.pipe(
   		switchMap((params: ParamMap) =>
-  			this.userService.getUser(params.get('id')))
+  			this.user$ = this.userService.getUser(params.get('id')))
   		);
   }
 
