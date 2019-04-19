@@ -4,6 +4,8 @@ import {Router} from '@angular/router';
 import { RoomsService } from '../services/rooms.service';
 import {Room} from '../models/Room';
 
+import {LocalStateService} from '../services/local-state.service';
+
 @Component({
   selector: 'app-rooms-view',
   templateUrl: './rooms-view.component.html',
@@ -14,6 +16,7 @@ export class RoomsViewComponent implements OnInit {
 	rooms;
 
   constructor(private router: Router,
+  						private localStateService: LocalStateService,
   						private roomsService: RoomsService) { }
 
   ngOnInit() {
@@ -25,6 +28,7 @@ export class RoomsViewComponent implements OnInit {
   }
 
   selectRoom(room: Room) {
+  	this.localStateService.setRoom(room);
   	this.router.navigate(["/room", room._id]);
   }
 

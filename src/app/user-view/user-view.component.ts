@@ -4,6 +4,8 @@ import { Router, ActivatedRoute, ParamMap} from '@angular/router';
 import {switchMap} from 'rxjs/operators';
 
 import {UserService} from '../services/user.service';
+import {LocalStateService} from '../services/local-state.service';
+import {User} from '../models/User';
 
 @Component({
   selector: 'app-user-view',
@@ -12,15 +14,21 @@ import {UserService} from '../services/user.service';
 })
 export class UserViewComponent implements OnInit {
 
-	user$: Observable<any>;
+	user: User;
   constructor(private route: ActivatedRoute,
+  						private localStateService: LocalStateService,
   						private userService: UserService) { }
 
   ngOnInit() {
-  	this.route.paramMap.pipe(
-  		switchMap((params: ParamMap) =>
-  			this.user$ = this.userService.getUser(params.get('id')))
-  		);
+  	this.route.paramMap
+  		.pipe(
+  		switchMap((params: ParamMap) => this.userService.getUser(params.get('id'))))
+  		.subscribe(user => this.user = user);
+  }
+
+  canEdit(): boolean {
+  	let currentUser = this.localStateService.getUser();
+  	return currentUser && this.user && currentUser.id === this.user.id;
   }
 
 }

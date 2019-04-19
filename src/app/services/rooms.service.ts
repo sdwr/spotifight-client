@@ -22,8 +22,7 @@ export class RoomsService {
 
   addRoom(name: string) {
   	let body = new HttpParams().set('name', name);
-  	let config = {headers: new HttpHeaders({'Content-Type': 'application/json' })};
-  	return this.http.post(this.roomPath, body, config);
+  	return this.http.post(this.roomPath, body);
   }
 
   deleteRoom(roomId: string) {

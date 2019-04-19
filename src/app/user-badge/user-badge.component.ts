@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import {Router} from '@angular/router';
-import {Observable} from 'rxjs';
+import {BehaviorSubject} from 'rxjs';
 
 import {UserService} from '../services/user.service';
+import {LocalStateService} from '../services/local-state.service';
+import {User} from '../models/User';
 
 @Component({
   selector: 'app-user-badge',
@@ -11,9 +13,10 @@ import {UserService} from '../services/user.service';
 })
 export class UserBadgeComponent implements OnInit {
 
-	user$: Observable<any>
+	user$: BehaviorSubject<User>;
 
   constructor(private userService: UserService,
+  						private localStateService: LocalStateService,
   						private router: Router) { }
 
   ngOnInit() {
@@ -21,11 +24,13 @@ export class UserBadgeComponent implements OnInit {
   }
 
   loadUser() {
-  	this.user$ = this.userService.getUser("5ca40293fef12d5b1ccc528c");
+  	this.user$ = this.localStateService.user$;
+  	if(!this.user$.value) {
+  		this.userService.logIn();
+  	}
   }
 
   goToUser(id: string) {
-  	this.user$.subscribe(u => console.log(u));
   	this.router.navigate(['/user', id]);
   }
 

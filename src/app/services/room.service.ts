@@ -15,4 +15,8 @@ export class RoomService {
   getRoom(id: string) {
   	return this.http.get(this.roomPath + "/" + id);
   }
+
+  getUsers(id: string) {
+  	return this.http.get(this.roomPath + "/" + id + "/users");
+  }
 }
