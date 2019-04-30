@@ -2,6 +2,9 @@
 	<app-back-to-rooms></app-back-to-rooms>
 	<div *ngIf="room$ |async as room">
 		{{room._id}}
+		<app-song-player></app-song-player>
+		<app-song-pending></app-song-pending>
+		<app-song-search></app-song-search>
 	</div>
 </div>
 

@@ -1,0 +1,15 @@
+<div class="search-container">
+	Search for a track:
+	<input #searchText (keyup)="searchForSong(searchText.value)">
+	<div class="search-results">
+		<ul>
+			<li *ngFor="let track of searchResults">
+				<div>
+					<button (click)="addPending(track)">+</button>
+					<span>{{track.name}} - {{track.artists[0].name}}</span>
+				</div>
+			</li>
+		</ul>
+		
+	</div>
+</div>

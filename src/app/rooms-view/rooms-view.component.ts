@@ -21,6 +21,9 @@ export class RoomsViewComponent implements OnInit {
 
   ngOnInit() {
   	this.updateRoomList();
+  	if(!this.localStateService.spotifyToken) {
+  		this.router.navigate(["spotifyLogin"]);
+  	}
   }
 
   updateRoomList() {
