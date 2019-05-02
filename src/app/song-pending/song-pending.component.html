@@ -1,3 +1,7 @@
-<p>
-  song-playing works!
-</p>
+<div class="pending-container">
+	<div *ngFor="let song of pendingSongs$ | async">
+		<div class="pending-song" *ngIf="song.trackObj">
+			{{song.trackObj.name}} {{song.trackObj.artists[0].name}}
+		</div>
+	</div>
+</div>

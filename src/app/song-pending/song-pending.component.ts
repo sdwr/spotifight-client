@@ -1,5 +1,12 @@
 import { Component, OnInit } from '@angular/core';
 
+import {Observable} from 'rxjs'
+
+import {LocalStateService} from '../services/local-state.service';
+import {SongService} from '../services/song.service';
+
+import {Song} from '../models/song';
+
 @Component({
   selector: 'app-song-pending',
   templateUrl: './song-pending.component.html',
@@ -7,9 +14,14 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SongPendingComponent implements OnInit {
 
-  constructor() { }
+	pendingSongs$: Observable<Song[]>;
+
+  constructor(private localState: LocalStateService,
+  						private songService: SongService) { }
 
   ngOnInit() {
+  	this.pendingSongs$ = this.localState.pendingSongs$;
+  	this.songService.getPending(this.localState.getRoom()._id).subscribe();
   }
 
 }

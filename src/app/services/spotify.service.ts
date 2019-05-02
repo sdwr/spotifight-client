@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import {Router} from '@angular/router';
 import { HttpParams, HttpClient } from '@angular/common/http';
 import SpotifyWebApi from 'spotify-web-api-js';
 import * as moment from 'moment';
@@ -27,7 +28,8 @@ export class SpotifyService {
 
   constructor(private http: HttpClient,
               private songService: SongService,
-              private localStateService: LocalStateService) {
+              private localStateService: LocalStateService,
+              private router: Router) {
   	this.clientId = '4ab300b68542479483b2e9b509c8a31e';
   	this.redirectUri = window.location.origin + "/callback";
   	this.scope = 'user-modify-playback-state user-read-currently-playing user-read-playback-state';
@@ -40,7 +42,7 @@ export class SpotifyService {
 
     this.spotifyApi = new SpotifyWebApi();
 
-    this.tryLoadToken();
+    //this.tryLoadToken();
   }
 
   tryLoadToken() {
@@ -51,6 +53,7 @@ export class SpotifyService {
       this.accessToken = accessToken;
       this.expiresAt = expiresAt;
       this.spotifyApi.setAccessToken(this.accessToken);
+      this.router.navigate(['/rooms']);
     }
   }
 
@@ -72,19 +75,35 @@ export class SpotifyService {
   	let expiresIn = queryParams.get('expires_in');
   	let state = queryParams.get('state');
   	let error = queryParams.get('error');
+  	let expiresAt = moment().add(expiresIn, 'seconds').toString();
 
   	if (accessToken) {
-      this.accessToken = accessToken;
-      console.log(accessToken);
-      this.expiresAt = moment().add(expiresIn, 'seconds');
-      this.spotifyApi.setAccessToken(this.accessToken);
-
-      localStorage.setItem("accessToken", this.accessToken);
-      localStorage.setItem("expiresAt", this.expiresAt);
-
+  		localStorage.setItem("accessToken", accessToken);
+      localStorage.setItem("expiresAt", expiresAt);
+      this.tryLoadToken();
     } else {
       console.log("Error logging in to spotify: " + error);
     }
+  }
+
+  checkExpired() {
+  	if (!this.expiresAt || !this.accessToken || moment().isAfter(this.expiresAt)) {
+  		this.backToLoginOnExpiry();
+  		return true;
+  	}
+  	return false;
+  }
+
+  backToLoginOnExpiry() {
+		this.clearToken();
+		this.router.navigate(['/spotifyLogin']);
+  }
+
+  clearToken(){
+		localStorage.setItem('accessToken', "");
+		localStorage.setItem('expiresAt', "");
+		this.expiresAt = null;
+		this.accessToken = null;
   }
 
   isLoggedInToSpotify(): boolean {
@@ -96,24 +115,32 @@ export class SpotifyService {
   }
 
   getUser() {
-    return this.spotifyApi.getMe();
+  	if(!this.checkExpired()) { 
+  	  return this.spotifyApi.getMe();
+  	 }
   }
 
   getCurrentlyPlaying() {
-    return this.spotifyApi.getMyCurrentPlaybackState();
+  	if(!this.checkExpired()) {
+    	return this.spotifyApi.getMyCurrentPlaybackState();
+  	}
   }
 
   getSong(id: string) {
   }
 
   setSong(track: Track, position_ms: number) {
-    if(this.accessToken && this.syncWithSpotify) {
-      return this.spotifyApi.play({uris: [track.uri], position_ms});
+    if(this.syncWithSpotify) {
+    	if(!this.checkExpired()){
+    		return this.spotifyApi.play({uris: [track.uri], position_ms});
+    	}
     }
   }
 
   searchForSong(searchText: string): Promise<any> {
-    return this.spotifyApi.searchTracks(searchText, {limit: 10});
+  	if(!this.checkExpired()) {
+    	return this.spotifyApi.searchTracks(searchText, {limit: 10});
+  	}
   }
 
   setSync(sync: boolean) {

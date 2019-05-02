@@ -11,9 +11,6 @@ import {Song} from '../models/Song';
 })
 export class LocalStateService {
 
-	spotifyToken: string;
-	expires_at: string;
-
 	user$: BehaviorSubject<User>;
 	room$: BehaviorSubject<Room>;
 	currentSong$: BehaviorSubject<Song>;

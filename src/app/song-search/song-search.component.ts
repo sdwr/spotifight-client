@@ -33,7 +33,7 @@ export class SongSearchComponent implements OnInit {
 	addPending(track: Track) {
 		let room = this.localState.getRoom();
 		let user = this.localState.getUser();
-		this.songService.addPending(room._id, track, user.id);
+		this.songService.addPending(room._id, track, user.id).subscribe(x => console.log(x));
 	}
 
 }
