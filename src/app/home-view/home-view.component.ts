@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {switchMap } from 'rxjs/operators';
 
 import {RoomService} from '../services/room.service';
-import {UserService} from '../services/user.service';
+import {LocalStateService} from '../services/local-state.service';
 import {Room} from '../models/Room';
 
 @Component({
@@ -19,13 +19,15 @@ export class HomeViewComponent implements OnInit {
 
   constructor(private route: ActivatedRoute,
   						private roomService: RoomService,
-  						private userService: UserService) { }
+  						private localState: LocalStateService) { }
 
   ngOnInit() {
-  	this.room$ = this.route.paramMap.pipe(
-  		switchMap((params: ParamMap) =>
-  			this.roomService.getRoom(params.get('id')))
-  		);
+    this.room$ = this.localState.room$;
+  	this.route.paramMap
+    .pipe(switchMap((params: ParamMap) =>
+  		this.roomService.getRoom(params.get('id')))
+    )
+    .subscribe(room => this.localState.setRoom(room as Room));
   }
 
 }

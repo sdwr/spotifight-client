@@ -6,6 +6,7 @@ import * as moment from 'moment';
 
 import { SongService } from './song.service';
 import { LocalStateService} from './local-state.service';
+import { UserService} from './user.service';
 import { Track } from '../models/track';
 import {Song } from '../models/song';
 
@@ -29,7 +30,8 @@ export class SpotifyService {
   constructor(private http: HttpClient,
               private songService: SongService,
               private localStateService: LocalStateService,
-              private router: Router) {
+              private router: Router,
+              private userService: UserService) {
   	this.clientId = '4ab300b68542479483b2e9b509c8a31e';
   	this.redirectUri = window.location.origin + "/callback";
   	this.scope = 'user-modify-playback-state user-read-currently-playing user-read-playback-state';
@@ -42,7 +44,7 @@ export class SpotifyService {
 
     this.spotifyApi = new SpotifyWebApi();
 
-    //this.tryLoadToken();
+    this.tryLoadToken();
   }
 
   tryLoadToken() {
@@ -53,7 +55,6 @@ export class SpotifyService {
       this.accessToken = accessToken;
       this.expiresAt = expiresAt;
       this.spotifyApi.setAccessToken(this.accessToken);
-      this.router.navigate(['/rooms']);
     }
   }
 
@@ -81,6 +82,7 @@ export class SpotifyService {
   		localStorage.setItem("accessToken", accessToken);
       localStorage.setItem("expiresAt", expiresAt);
       this.tryLoadToken();
+      this.router.navigate(['/rooms']);
     } else {
       console.log("Error logging in to spotify: " + error);
     }

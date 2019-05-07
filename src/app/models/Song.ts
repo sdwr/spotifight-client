@@ -1,5 +1,6 @@
 import {Track} from './track';
 export interface Song {
+	_id?: string;
 	trackId: string;
 	trackObj: Track;
 	roomId: string;

@@ -1,16 +1,18 @@
 <div class="song-player">
-	<div *ngIf="currentSong$ | async as song"
-		<img src="{{song.track.album.images[0].url"}} class="player-img">
-		<div class="player-text">
-			<div class="player-name">
-				{{song.track.name}}
-			</div>
-			<div class="player-artist">
-				{{song.track.artists[0].name}}
-			</div>
-			<div class="player-progress">
-				<div class="progress-bar" 
-					 [ngStyle]="{'width' : '' + currentProgress + '%'}">
+	<div *ngIf="currentSong$ | async as song">
+		<div *ngIf="song.track">
+			<img src="{{song.track.album.images[0].url}}" class="player-img">
+			<div class="player-text">
+				<div class="player-name">
+					{{song.track.name}}
+				</div>
+				<div class="player-artist">
+					{{song.track.artists[0].name}}
+				</div>
+				<div class="player-progress">
+					<div class="progress-bar" 
+						 [ngStyle]="{'width' : '' + currentProgress + '%'}">
+					</div>
 				</div>
 			</div>
 		</div>
